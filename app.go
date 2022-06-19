@@ -22,8 +22,13 @@ type Application struct {
 	Ctx     context.Context
 }
 
+func New() *Application {
+	return &Application{
+		version: ver,
+	}
+}
+
 func (a *Application) InitProcess() {
-	a.version = ver
 	pwd, err := os.Getwd()
 	if err != nil {
 		a.Log.Panic(err)
