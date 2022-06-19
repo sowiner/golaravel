@@ -1,9 +1,10 @@
-package application
+package golaravel
 
 import (
 	"context"
 	"os"
 
+	"github.com/sowiner/golaravel/application"
 	"github.com/sowiner/golaravel/config"
 	"github.com/sowiner/golaravel/pkg/helps"
 	"github.com/sowiner/golaravel/server"
@@ -17,7 +18,7 @@ type Application struct {
 	version appver
 	Config  config.IConfigure
 	Srv     server.Iserver
-	Log     Logger
+	Log     application.Logger
 	Ctx     context.Context
 }
 
@@ -28,7 +29,7 @@ func (a *Application) InitProcess() {
 		a.Log.Panic(err)
 	}
 	// check project default dir struct
-	for _, d := range DefaultProjectFolders {
+	for _, d := range application.DefaultProjectFolders {
 		if !helps.CheckFolder(pwd + d) {
 			err = helps.CreateFolder(pwd + d)
 			if err != nil {
