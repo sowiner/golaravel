@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/sirupsen/logrus"
 	"github.com/sowiner/golaravel/application"
 	"github.com/sowiner/golaravel/config"
 	"github.com/sowiner/golaravel/pkg/helps"
@@ -25,6 +26,9 @@ type Application struct {
 func New() *Application {
 	return &Application{
 		version: ver,
+		Log:     logrus.New(),
+		Ctx:     context.Background(),
+		Srv:     server.NewServer,
 	}
 }
 
@@ -33,6 +37,8 @@ func (a *Application) InitProcess() {
 	if err != nil {
 		a.Log.Panic(err)
 	}
+
+	a.Log.Info(pwd)
 	// check project default dir struct
 	for _, d := range application.DefaultProjectFolders {
 		if !helps.CheckFolder(pwd + d) {
