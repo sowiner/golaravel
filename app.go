@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/sirupsen/logrus"
 	"github.com/sowiner/golaravel/application"
 	"github.com/sowiner/golaravel/config"
 	"github.com/sowiner/golaravel/pkg/helps"
@@ -17,16 +16,21 @@ const ver appver = appver("1.0.0")
 
 type Application struct {
 	version appver
-	Config  config.IConfigure
+	Config  *config.Configure
 	Srv     server.Iserver
-	Log     application.Logger
 	Ctx     context.Context
 }
 
-func New() *Application {
+func New(opt *config.Configure) *Application {
+	var cfg *config.Configure
+	if opt == nil {
+		cfg = opt
+	} else {
+		cfg = config.NewConfig()
+	}
 	return &Application{
 		version: ver,
-		Log:     logrus.New(),
+		Config:  cfg,
 		Ctx:     context.Background(),
 		Srv:     server.NewServer,
 	}
@@ -35,16 +39,16 @@ func New() *Application {
 func (a *Application) InitProcess() {
 	pwd, err := os.Getwd()
 	if err != nil {
-		a.Log.Panic(err)
+		a.Config.Log.Panic(err)
 	}
 
-	a.Log.Info(pwd)
+	a.Config.Log.Info(pwd)
 	// check project default dir struct
 	for _, d := range application.DefaultProjectFolders {
 		if !helps.CheckFolder(pwd + d) {
 			err = helps.CreateFolder(pwd + d)
 			if err != nil {
-				a.Log.Panic(err)
+				a.Config.Log.Panic(err)
 			}
 		}
 	}
