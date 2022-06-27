@@ -21,16 +21,10 @@ type Application struct {
 	Ctx     context.Context
 }
 
-func New(opt *config.Configure) *Application {
-	var cfg *config.Configure
-	if opt == nil {
-		cfg = opt
-	} else {
-		cfg = config.NewConfig()
-	}
+func New() *Application {
 	return &Application{
 		version: ver,
-		Config:  cfg,
+		Config:  config.NewConfig(),
 		Ctx:     context.Background(),
 		Srv:     server.NewServer,
 	}
